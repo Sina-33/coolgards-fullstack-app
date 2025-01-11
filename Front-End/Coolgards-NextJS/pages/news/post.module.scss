@@ -1,0 +1,83 @@
+.container {
+  margin-top: 5rem;
+}
+
+.header {
+  display: block;
+  margin: 0 auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  @media screen and (max-width: 600px) {
+    width: 360px
+  }
+}
+
+.image {
+  object-fit: cover;
+  z-index: 9;
+  height: 400px;
+  width: 600px;
+  @media screen and (max-width: 600px) {
+    width: 360px
+  }
+}
+
+.titleContainer {
+  color: white;
+  z-index: 10;
+  padding: 1rem;
+  border-radius: 1rem;
+  position: absolute;
+  top: 120px;
+  left: 100px;
+  background-color: rgba(0, 0, 0, 0.57);
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+.writer {
+  font-size: 1em;
+  font-weight: normal;
+}
+.date {
+  font-size: .8em;
+  font-weight: lighter;
+  line-height: 0;
+}
+
+.content {
+  display: block;
+  max-width: 900px;
+  margin: 1rem auto;
+  @media screen and (max-width: 600px) {
+    max-width: 600px;
+  }
+  @media screen and (max-width: 400px) {
+    max-width: 400px;
+  }
+}
+
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tags {
+  color: #ffffff;
+  padding: .8rem;
+  background-color: #8c8c8c;
+  border-radius: .5rem;
+  margin: .5rem;
+  cursor: pointer;
+}
+.content img {
+  @media screen and (max-width: 800px) {
+    max-width: 80vw;
+  }
+}

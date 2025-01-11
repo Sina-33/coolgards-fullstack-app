@@ -1,0 +1,77 @@
+.container {
+  margin-top: 6rem;
+  margin-bottom: 10rem;
+  padding: .8rem;
+}
+
+.mainTitle {
+  font-weight: 200;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #3f3f3f;
+  text-align: center;
+}
+
+.card {
+  overflow: hidden;
+  border-radius: 1rem;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 10px 11px 16px -13px rgba(0,0,0,0.75);
+}
+
+.default {
+  transition: transform .3s ease-in-out;
+  object-fit: cover;
+  width: 100%;
+}
+.released {
+  @extend .default;
+  transform: scale(1.05);
+}
+.hovered {
+  @extend .default;
+  transform: scale(1.08);
+}
+
+.titleContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+}
+
+
+.title {
+  font-size: 4vw;
+  font-weight: 400;
+  margin: 0.5rem;
+  padding: 1rem;
+  background-color: rgba(250, 250, 250, .8);
+  border-radius: 5px;
+  @media (min-width: 550px) {
+    font-size: 3vw
+  }
+  @media (min-width: 750px) {
+    font-size: 2vw
+  }
+  @media (min-width: 1000px) {
+    font-size: 1.5vw
+  }
+}
+
+.readMore {
+  position: absolute;
+  bottom: 17px;
+  right: 40px;
+  font-weight: 200;
+  font-size: 1.2rem;
+  transition: transform .2s ease-out;
+}
+.readMoreHover {
+  @extend .readMore;
+  transform: scale(1.2);
+  font-weight: 400;
+  transition: transform .2s ease-out;
+}

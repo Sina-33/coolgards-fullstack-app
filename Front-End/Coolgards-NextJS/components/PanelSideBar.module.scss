@@ -1,0 +1,53 @@
+.menu {
+  width: 14rem;
+  background: linear-gradient(90deg, #370493 30%, #672ecf 90%);
+  position: fixed;
+  height: 100%;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  color: #e8e8e8;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  z-index: 10;
+
+  @media screen and (max-width: 1000px) {
+    width: 2.8rem;
+  }
+
+
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+}
+
+.adminName {
+  @media screen and (max-width: 1000px) {
+   display: none;
+  }
+}
+
+.link {
+  margin: .5rem;
+  padding: .5rem;
+  cursor: pointer;
+  border-radius: 2rem;
+  display: flex;
+  justify-items: start;
+  align-items: center;
+  &:hover{
+    background-color: rgba(103, 46, 207, 0.69);
+  }
+  @media screen and (max-width: 1000px) {
+    padding: .5rem;
+    margin: .2rem;
+  }
+}

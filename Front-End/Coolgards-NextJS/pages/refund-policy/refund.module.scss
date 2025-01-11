@@ -1,0 +1,24 @@
+.container {
+  margin-bottom: 12rem;
+  margin-top: 4rem;
+}
+
+.mainTitle {
+  font-weight: 200;
+  font-size: 2.5rem;
+  color: #3f3f3f;
+}
+
+.titleContainer{
+  background-image: url("/about.svg");
+  background-position: center;
+  background-repeat: space;
+}
+
+.contentContainer {
+  width: 65vw;
+  margin: 0 auto;
+  @media screen and (max-width: 800px) {
+    width: 85vw;
+  }
+}
