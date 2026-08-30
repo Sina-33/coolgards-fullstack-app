@@ -24,7 +24,8 @@ jobs:
         with:
           go-version: '1.23.x'
           cache-dependency-path: Back-End/Coolgards-Go/go.mod
-      - run: go mod download
+      - run: go mod tidy
+      - run: cat go.mod && cat go.sum
       - run: gofmt -w .
       - run: go vet ./...
       - run: go test -race ./...
