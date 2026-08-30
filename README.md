@@ -1,77 +1,103 @@
-# Coolgards Full-Stack Application
+# Coolgards Full-Stack Application — Go Backend Edition
 
-## Overview
-This repository contains a full-stack e-commerce-style web application, separated into an Express.js/MongoDB back end and a Next.js front end. It implements user authentication, product/order management, file uploads, and payment integration.
+A full-stack e-commerce application with the original Next.js/React interface and a production-oriented Go backend. This edition is a backend migration of the original Coolgards Express/MongoDB project: the browser-facing API contract is intentionally preserved while the server implementation is redesigned in Go.
 
-## Features
-- User authentication with JWT and hashed passwords (bcrypt), including password reset flow
-- Product, order, shipment, post, and message data models (Mongoose/MongoDB)
-- File upload handling (Multer, FilePond)
-- Transactional email (Nodemailer + Handlebars templates)
-- Payment integration (PayPal, Braintree)
-- Admin-gated routes via custom middleware
+## Architecture
 
-## Tech Stack
-- **Back end:** Node.js, Express, MongoDB/Mongoose, JWT, bcrypt, Multer, Nodemailer
-- **Front end:** Next.js 13, React 18, Material UI, Tailwind CSS, Axios
-
-## Screenshots
-Not included in this repository — to be added.
-
-## Installation
-
-### Back end
-```bash
-cd Back-End/Coolgards-ExpressJS
-npm install
+```text
+Browser
+  │
+  ▼
+Next.js 13 / React 18
+  │  /api/* rewrite
+  ▼
+Go 1.23 REST API (net/http)
+  ├── MongoDB
+  ├── JWT + server-side session revocation
+  ├── bcrypt password hashing
+  ├── media upload service
+  ├── SMTP password reset
+  └── PayPal checkout/capture
 ```
-Create a `.env.dev` file (not committed) with the required environment variables (MongoDB connection string, JWT secret, mail transport credentials, etc. — see `src/envConfigs.js` and `src/db/Mongoose.js` for the variables read at runtime).
 
-### Front end
+## Backend engineering highlights
+
+- Go 1.23 `net/http` API with explicit middleware and typed domain models
+- MongoDB official Go driver with indexes and unique constraints
+- secure HTTP-only cookie authentication plus Bearer-token compatibility
+- JWT expiry plus server-side session revocation; only token hashes are stored
+- role-based admin authorization
+- bcrypt password hashing and expiring single-use password-reset tokens
+- rate limiting, request-size limits, panic recovery, request IDs, logging and security headers
+- strict CORS allow-list with credential support
+- graceful shutdown and bounded server/client timeouts
+- order totals recalculated from database records instead of trusting browser prices
+- validated multipart uploads with MIME allow-list, random server filenames and size caps
+- PayPal integration with provider error handling and request timeouts
+- health endpoint, Docker support and GitHub Actions CI (`gofmt`, `go vet`, race-enabled tests, build)
+
+## Project structure
+
+```text
+.
+├── Back-End/Coolgards-Go/
+│   ├── cmd/api/                 # application entry point
+│   ├── internal/
+│   │   ├── auth/                # JWT + secure token hashing
+│   │   ├── commerce/            # trusted order calculations
+│   │   ├── config/              # environment configuration
+│   │   ├── domain/              # typed MongoDB models
+│   │   ├── httpapi/             # routes, middleware, handlers
+│   │   ├── mailer/              # password reset email
+│   │   ├── password/            # bcrypt
+│   │   ├── payment/             # PayPal client
+│   │   └── store/               # MongoDB connection/indexes
+│   ├── Dockerfile
+│   └── .env.example
+└── Front-End/Coolgards-NextJS/  # original Next.js frontend
+```
+
+## Local development
+
+### Backend
+```bash
+cd Back-End/Coolgards-Go
+cp .env.example .env
+# Set a strong SECRET and your MongoDB connection string.
+go mod download
+go run ./cmd/api
+```
+
+### Frontend
 ```bash
 cd Front-End/Coolgards-NextJS
-npm install
+npm ci
 ```
-
-## Running the Project
-
-### Back end
-```bash
-npm start
+Create the frontend environment file with:
+```env
+BASE_URL=http://localhost:4000
 ```
-
-### Front end
+Then run:
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000).
+Open `http://localhost:3000`.
 
-## Project Structure
-```
-.
-├── Back-End/Coolgards-ExpressJS/
-│   └── src/
-│       ├── db/          # MongoDB connection
-│       ├── mail/        # Email transport
-│       ├── middleware/  # Auth, admin, CORS middleware
-│       ├── models/      # Mongoose schemas (User, Product, Order, Shipment, Post, Message, File)
-│       ├── routers/     # Express route handlers
-│       └── seeders/     # Database seed scripts
-└── Front-End/Coolgards-NextJS/
-    ├── pages/
-    ├── components/
-    └── utils/
+## Validation
+
+```bash
+cd Back-End/Coolgards-Go
+gofmt -w .
+go vet ./...
+go test -race ./...
+go build ./cmd/api
 ```
 
-## Limitations
-- No `.env` file or example environment configuration is included in this repository; required environment variables must be reconstructed from the source (`envConfigs.js`, `Mongoose.js`, mail transporter, and payment integration files).
-- No automated tests are included for either the back end or front end.
-- This project was built as an applied full-stack exercise; it has not been reviewed for production security hardening.
+CI runs the formatting check, vet, race-enabled tests and build on backend changes.
 
-## Future Improvements
-- Add a `.env.example` file documenting required environment variables
-- Add automated tests (API and component-level)
-- Add CI configuration
+## API compatibility
+
+The frontend still calls paths such as `/api/users/login`, `/api/products`, `/api/orders`, `/api/panel/*`, and `/api/media/*`. Next.js rewrites those requests to the Go service, whose routes intentionally preserve the original Express route contract.
 
 ## Author
 Sina Mohammadi

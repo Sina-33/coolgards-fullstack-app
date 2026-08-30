@@ -1,0 +1,31 @@
+name: Go backend CI
+
+on:
+  push:
+    paths:
+      - 'Back-End/Coolgards-Go/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    paths:
+      - 'Back-End/Coolgards-Go/**'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Back-End/Coolgards-Go
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+          cache-dependency-path: Back-End/Coolgards-Go/go.mod
+      - run: go mod download
+      - run: gofmt -w .
+      - run: go vet ./...
+      - run: go test -race ./...
+      - run: go build ./cmd/api

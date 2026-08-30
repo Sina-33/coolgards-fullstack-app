@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./Back-End/Coolgards-Go
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      PORT: 4000
+      DB_ADDRESS: mongodb://mongo:27017/coolgards
+      DB_NAME: coolgards
+      SECRET: ${SECRET:?Set SECRET in the root .env file}
+      FRONTEND_BASE_URL: http://localhost:3000
+      ALLOWED_ORIGINS: http://localhost:3000
+      COOKIE_SECURE: "false"
+      CLIENT_ID: ${CLIENT_ID:-}
+      APP_SECRET: ${APP_SECRET:-}
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./Front-End/Coolgards-NextJS
+      args:
+        BASE_URL: http://backend:4000
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+  media_data:
